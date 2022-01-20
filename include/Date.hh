@@ -24,6 +24,11 @@ public:
     int getDay();
     int getMonth();
     int getYear();
+    //other methods
+    void inputDetails();
+    void printDetails();
+    void stringToDate(string);
+    string dateToString();
 };
 
 #endif // !DATE

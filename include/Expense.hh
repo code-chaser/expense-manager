@@ -13,22 +13,22 @@ using namespace std;
 class Expense
 {
 private:
-    string id;
-    Date date; 
+    int id;
+    Date date;
     Commodity commodity;
     int quantity;
     int amount;
 public:
     Expense();
-    Expense(string, Date, Commodity, int, int);
+    Expense(int, Date, Commodity, int, int);
     //setter methods
-    void setId(string);
+    void setId(int);
     void setDate(Date);
     void setCommodity(Commodity);
     void setQuantity(int);
     void setAmount(int);
     //getter methods
-    string getId();
+    int getId();
     Date getDate();
     Commodity getCommodity();
     int getQuantity();

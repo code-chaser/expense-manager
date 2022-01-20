@@ -10,20 +10,17 @@ using namespace std;
 class Commodity
 {
 private:
-    string id;
     string name;
     string type;
     int rate;
 public:
     Commodity();
-    Commodity(string, string, string, int);
+    Commodity(string, string, int);
     //setter methods
-    void setId(string);
     void setName(string);
     void setType(string);
     void setRate(int);
     //getter methods
-    string getId();
     string getName();
     string getType();
     int getRate();

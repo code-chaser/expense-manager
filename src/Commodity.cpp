@@ -1,31 +1,24 @@
-using namespace std;
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+using namespace std;
 
-#include "./../include/commodity.hh"
+#include "./../include/Commodity.hh"
 
 Commodity::Commodity()
 {
-    id = "";
     name = "";
     type = "";
     rate = 0;
 }
-Commodity::Commodity(string id, string name, string type, int rate)
+Commodity::Commodity(string name, string type, int rate)
 {
-    this->id = id;
     this->name = name;
     this->type = type;
     this->rate = rate;
 }
 //setter methods
-void Commodity::setId(string id)
-{
-    this->id = id;
-    return;
-}
 void Commodity::setName(string name)
 {
     this->name = name;
@@ -42,10 +35,6 @@ void Commodity::setRate(int rate)
     return;
 }
 //getter methods
-string Commodity::getId()
-{
-    return id;
-}
 string Commodity::getName()
 {
     return name;
@@ -61,8 +50,6 @@ int Commodity::getRate()
 //other methods
 void Commodity::inputDetails()
 {
-    cout << "Enter Commodity ID: ";
-    cin >> id;
     cout << "Enter Commodity Name: ";
     cin >> name;
     cout << "Enter Commodity Type: ";
@@ -73,7 +60,6 @@ void Commodity::inputDetails()
 }
 void Commodity::printDetails()
 {
-    cout << "Commodity ID: " << id << endl;
     cout << "Commodity Name: " << name << endl;
     cout << "Commodity Type: " << type << endl;
     cout << "Commodity Rate: " << rate << endl;

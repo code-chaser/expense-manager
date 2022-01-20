@@ -21,8 +21,8 @@ public:
     ExpenseManager();
     void addExpense(Expense);
     void addCommodityType(string);
-    void fillExpensesMap();
-    void fillCommodityTypesMap();
+    void readFromCSV();
+    void writeToCSV();
 };
 
 #endif // !EXPENSEMANAGER
