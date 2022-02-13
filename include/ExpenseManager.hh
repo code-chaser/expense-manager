@@ -15,8 +15,8 @@ using namespace std;
 class ExpenseManager
 {
 private:
-    map<int, Expense> expenses;
-    map<int, string> commodityTypes;
+    map<long long, Expense> expenses;
+    map<long long, string> commodityTypes;
 public:
     ExpenseManager();
     void addExpense(Expense);

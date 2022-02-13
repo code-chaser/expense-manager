@@ -14,22 +14,22 @@ using namespace std;
 class Expense
 {
 private:
-    int id;
+    long long id;
     Date date;
     Commodity commodity;
     double quantity;
     double amount;
 public:
     Expense();
-    Expense(int, Date, Commodity, double, double);
+    Expense(long long, Date, Commodity, double, double);
     //setter methods
-    void setId(int);
+    void setId(long long);
     void setDate(Date);
     void setCommodity(Commodity);
     void setQuantity(double);
     void setAmount(double);
     //getter methods
-    int getId();
+    long long getId();
     Date getDate();
     Commodity getCommodity();
     double getQuantity();
@@ -37,7 +37,7 @@ public:
     //other methods
     void inputDetails();
     void printDetails();
-    void printDetails(vector<Expense>);
+    static void printDetails(vector<Expense>);
 };
 
 #endif // !EXPENSE

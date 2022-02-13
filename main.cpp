@@ -6,8 +6,6 @@
 #include <limits> //used to get numeric limits
 using namespace std;
 
-#define int long long
-
 #include "./include/ExpenseManager.hh"
 #include "./include/Expense.hh"
 #include "./include/Commodity.hh"
@@ -30,11 +28,11 @@ Options:
 
 */
 
-signed main()
+int main()
 {
     ExpenseManager expenseManager;
     expenseManager.readFromCSV();
-    int choice = 0;
+    long long choice = 0;
     while (choice != -1)
     {
         cout << "Options: " << endl;
@@ -45,7 +43,7 @@ signed main()
         cin >> choice;
         if (choice == 1)
         {
-            int subChoice = 0;
+            long long subChoice = 0;
             while (subChoice != -1)
             {
                 cout << "Options: " << endl;
@@ -63,17 +61,21 @@ signed main()
                 }
                 else if (subChoice == 2)
                 {
-                    expenseManager.getExpenseDetails().printDetails();
+                    Expense expense = expenseManager.getExpenseDetails();
+                    if (expense.getId() != -1)
+                        expense.printDetails();
                 }
                 else if (subChoice == 3)
                 {
-                    expenseManager.removeExpense(expenseManager.getExpenseDetails());
+                    Expense expense = expenseManager.getExpenseDetails();
+                    if (expense.getId() != -1)
+                        expenseManager.removeExpense(expense);
                 }
             }
         }
         else if (choice == 2)
         {
-            int subChoice = 0;
+            long long subChoice = 0;
             while (subChoice != -1)
             {
                 cout << "Options: " << endl;
@@ -101,9 +103,15 @@ signed main()
                 }
             }
         }
-        else
+        else if (choice == -1)
         {
             cout << "Exiting..." << endl;
         }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+        }
     }
+    expenseManager.writeToCSV();
+    return 0;
 }

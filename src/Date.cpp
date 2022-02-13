@@ -12,38 +12,38 @@ Date::Date()
     month = -1;
     year = -1;
 }
-Date::Date(int day, int month, int year)
+Date::Date(long long day, long long month, long long year)
 {
     this->day = day;
     this->month = month;
     this->year = year;
 }
 //setter methods
-void Date::setDay(int day)
+void Date::setDay(long long day)
 {
     this->day = day;
     return;
 }
-void Date::setMonth(int month)
+void Date::setMonth(long long month)
 {
     this->month = month;
     return;
 }
-void Date::setYear(int year)
+void Date::setYear(long long year)
 {
     this->year = year;
     return;
 }
 //getter methods
-int Date::getDay()
+long long Date::getDay()
 {
     return day;
 }
-int Date::getMonth()
+long long Date::getMonth()
 {
     return month;
 }
-int Date::getYear()
+long long Date::getYear()
 {
     return year;
 }
@@ -65,20 +65,20 @@ void Date::stringToDate(string date)
 {
     stringstream ss(date);
     string token;
-    int i = 0;
+    long long i = 0;
     while (getline(ss, token, '/'))
     {
         if (i == 0)
         {
-            day = stoi(token);
+            day = stoll(token);
         }
         else if (i == 1)
         {
-            month = stoi(token);
+            month = stoll(token);
         }
         else if (i == 2)
         {
-            year = stoi(token);
+            year = stoll(token);
         }
         i++;
     }
@@ -87,10 +87,17 @@ void Date::stringToDate(string date)
 string Date::dateToString()
 {
     stringstream ss;
-    ss << day << "/" << month << "/" << year;
+    if(day < 10) ss << "0";
+    ss << day << "/";
+    if(month < 10) ss << "0";
+    ss << month << "/";
+    if(year < 10) ss << "000";
+    else if(year < 100) ss << "00";
+    else if(year < 1000) ss << "0";
+    ss << year;
     return ss.str();
 }
-int Date::value()
+long long Date::value()
 {
     return (day * 1000000) + (month * 10000) + (year * 1);
 }

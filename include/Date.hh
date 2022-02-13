@@ -10,26 +10,26 @@ using namespace std;
 class Date
 {
 private:
-    int day;
-    int month;
-    int year;
+    long long day;
+    long long month;
+    long long year;
 public:
     Date();
-    Date(int, int, int);
+    Date(long long, long long, long long);
     //setter methods
-    void setDay(int);
-    void setMonth(int);
-    void setYear(int);
+    void setDay(long long);
+    void setMonth(long long);
+    void setYear(long long);
     //getter methods
-    int getDay();
-    int getMonth();
-    int getYear();
+    long long getDay();
+    long long getMonth();
+    long long getYear();
     //other methods
     void inputDetails();
     void printDetails();
     void stringToDate(string);
     string dateToString();
-    int value();
+    long long value();
 };
 
 #endif // !DATE

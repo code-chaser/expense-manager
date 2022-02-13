@@ -4,22 +4,25 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <iomanip>
+#include <math.h>
 using namespace std;
 
 #include "./../include/ExpenseManager.hh"
 
 ExpenseManager::ExpenseManager()
 {
-    expenses = map<int, Expense>();
-    commodityTypes = map<int, string>();
+    expenses = map<long long, Expense>();
+    commodityTypes = map<long long, string>();
 }
 void ExpenseManager::addExpense(Expense expense)
 {
-    int cnt = 0;
-    for (int i = 0; i < expenses.size(); i++)
+    long long cnt = 0;
+    for (auto E : expenses)
     {
-        cnt += (expenses[i].getDate().value() == expense.getDate().value());
-        if (expenses[i].getDate().value() > expense.getDate().value())
+        if (E.second.getDate().value() == expense.getDate().value())
+            cnt++;
+        else if (E.second.getDate().value() > expense.getDate().value())
             break;
     }
     expense.setId(expense.getDate().value() * 1000 + cnt);
@@ -27,6 +30,10 @@ void ExpenseManager::addExpense(Expense expense)
     cout << "\nExpense added successfully!" << endl;
     cout << "Expense ID is " << expense.getId() << "\n"
          << endl;
+    for (auto commodityType : commodityTypes)
+        if (expense.getCommodity().getType() == commodityType.second)
+            return;
+    commodityTypes[commodityTypes.size()] = expense.getCommodity().getType();
     return;
 }
 void ExpenseManager::removeExpense(Expense expense)
@@ -38,7 +45,7 @@ void ExpenseManager::removeExpense(Expense expense)
 }
 Expense ExpenseManager::getExpenseDetails()
 {
-    int choice;
+    long long choice;
     cout << "Search expense by: " << endl;
     cout << "[01] - ID" << endl;
     cout << "[02] - Date" << endl;
@@ -58,7 +65,7 @@ Expense ExpenseManager::getExpenseDetails()
     else if (choice == 1)
     {
 
-        int idReq;
+        long long idReq;
         cout << "Enter ID: ";
         cin >> idReq;
         if (expenses.find(idReq) != expenses.end())
@@ -107,13 +114,12 @@ Expense ExpenseManager::getExpenseDetails()
         {
             cout << matchingExpenses.size() << " matching records found with date " << dateReq.dateToString() << ".\n"
                  << endl;
-            Expense E = Expense();
-            E.printDetails(matchingExpenses);
+            Expense::printDetails(matchingExpenses);
             char choice = 'Y';
             while (choice == 'Y')
             {
                 cout << "\nEnter ID of the required expense: ";
-                int idReq;
+                long long idReq;
                 cin >> idReq;
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
@@ -158,12 +164,12 @@ Expense ExpenseManager::getExpenseDetails()
             cout << matchingExpenses.size() << " matching records found with commodity type " << commodityTypeReq << ".\n"
                  << endl;
             Expense E = Expense();
-            E.printDetails(matchingExpenses);
+            Expense::printDetails(matchingExpenses);
             char choice = 'Y';
             while (choice == 'Y')
             {
                 cout << "\nEnter ID of the required expense: ";
-                int idReq;
+                long long idReq;
                 cin >> idReq;
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
@@ -208,12 +214,12 @@ Expense ExpenseManager::getExpenseDetails()
             cout << matchingExpenses.size() << " matching records found with commodity name " << commodityNameReq << ".\n"
                  << endl;
             Expense E = Expense();
-            E.printDetails(matchingExpenses);
+            Expense::printDetails(matchingExpenses);
             char choice = 'Y';
             while (choice == 'Y')
             {
                 cout << "\nEnter ID of the required expense: ";
-                int idReq;
+                long long idReq;
                 cin >> idReq;
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
@@ -232,7 +238,7 @@ Expense ExpenseManager::getExpenseDetails()
     }
     else if (choice == 5)
     {
-        int lowerLimitReq, upperLimitReq;
+        long long lowerLimitReq, upperLimitReq;
         cout << "Enter Amount Range:\n";
         cout << "Lower Limit: ";
         cin >> lowerLimitReq;
@@ -264,12 +270,12 @@ Expense ExpenseManager::getExpenseDetails()
                  << upperLimitReq << ".\n"
                  << endl;
             Expense E = Expense();
-            E.printDetails(matchingExpenses);
+            Expense::printDetails(matchingExpenses);
             char choice = 'Y';
             while (choice == 'Y')
             {
                 cout << "\nEnter ID of the required expense: ";
-                int idReq;
+                long long idReq;
                 cin >> idReq;
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
@@ -312,34 +318,39 @@ void ExpenseManager::printCommodityTypes()
 {
     cout << "\nCommodity Types:\n\n";
     for (auto commodityType : commodityTypes)
-        cout << commodityType.first << ": " << commodityType.second << endl;
+        cout << left << setw(log10(max(0, (int)commodityTypes.size() - 1))) << commodityType.first, cout << ": " << commodityType.second << endl;
     cout << endl;
     return;
 }
 string ExpenseManager::getCommodityType()
 {
-    int id;
+    long long id;
     cout << "\nEnter ID of required Commodity Type: ";
     cin >> id;
+    if (id < 0 || id >= commodityTypes.size())
+    {
+        cout << "Invalid ID.\n";
+        return "";
+    }
     return commodityTypes[id];
 }
 void ExpenseManager::readFromCSV()
 {
     ifstream file;
-    file.open("./../data/expenseSheet.csv");
+    file.open("./data/expenseSheet.csv");
     string line;
     getline(file, line); // skip first line
     while (getline(file, line))
     {
         stringstream ss(line);
         string token;
-        int id;
+        long long id;
         Date date;
         Commodity commodity;
-        int quantity;
-        int amount;
+        long long quantity;
+        long long amount;
         getline(ss, token, ',');
-        id = stoi(token);
+        id = stoll(token);
         getline(ss, token, ',');
         date.stringToDate(token);
         getline(ss, token, ',');
@@ -347,15 +358,15 @@ void ExpenseManager::readFromCSV()
         getline(ss, token, ',');
         commodity.setType(token);
         getline(ss, token, ',');
-        commodity.setRate(stoi(token));
+        commodity.setRate(stoll(token));
         getline(ss, token, ',');
-        quantity = stoi(token);
+        quantity = stoll(token);
         getline(ss, token, ',');
-        amount = stoi(token);
+        amount = stoll(token);
         expenses[id] = Expense(id, date, commodity, quantity, amount);
     }
     file.close();
-    file.open("./../data/commodityTypes.csv");
+    file.open("./data/commodityTypes.csv");
     getline(file, line); // skip first line
     while (getline(file, line))
     {
@@ -370,11 +381,11 @@ void ExpenseManager::readFromCSV()
 void ExpenseManager::writeToCSV()
 {
     ofstream file;
-    file.open("./../data/temp.csv");
+    file.open("./data/temp.csv");
     file << "ID,Date,Commodity Name,Commodity Type,Rate,Quantity,Amount\n";
     for (auto expense : expenses)
     {
-        file << expense.first << ",";
+        file << ((expense.second.getDate().getDay() < 10) ? ("0" + to_string(expense.first)) : to_string(expense.first)) << ",";
         file << expense.second.getDate().dateToString() << ",";
         file << expense.second.getCommodity().getName() << ",";
         file << expense.second.getCommodity().getType() << ",";
@@ -383,10 +394,10 @@ void ExpenseManager::writeToCSV()
         file << expense.second.getAmount() << "\n";
     }
     file.close();
-    remove("./../data/expenseSheet.csv");
-    rename("./../data/temp.csv", "./../data/expenseSheet.csv");
+    remove("./data/expenseSheet.csv");
+    rename("./data/temp.csv", "./data/expenseSheet.csv");
 
-    file.open("./../data/temp.csv");
+    file.open("./data/temp.csv");
     file << "S.No.,Commodity Type\n";
     for (auto commodityType : commodityTypes)
     {
@@ -394,8 +405,8 @@ void ExpenseManager::writeToCSV()
         file << commodityType.second << "\n";
     }
     file.close();
-    remove("./../data/commodityTypes.csv");
-    rename("./../data/temp.csv", "./../data/commodityTypes.csv");
+    remove("./data/commodityTypes.csv");
+    rename("./data/temp.csv", "./data/commodityTypes.csv");
 
     return;
 }

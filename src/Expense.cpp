@@ -17,7 +17,7 @@ Expense::Expense()
     quantity = -1.00;
     amount = -1.00;
 }
-Expense::Expense(int id, Date date, Commodity commodity, double quantity, double amount)
+Expense::Expense(long long id, Date date, Commodity commodity, double quantity, double amount)
 {
     this->id = id;
     this->date = date;
@@ -26,7 +26,7 @@ Expense::Expense(int id, Date date, Commodity commodity, double quantity, double
     this->amount = amount;
 }
 // setter methods
-void Expense::setId(int id)
+void Expense::setId(long long id)
 {
     this->id = id;
     return;
@@ -52,7 +52,7 @@ void Expense::setAmount(double amount)
     return;
 }
 // getter methods
-int Expense::getId()
+long long Expense::getId()
 {
     return id;
 }
@@ -81,6 +81,11 @@ void Expense::inputDetails()
     commodity.inputDetails();
     cout << "Quantity (kg/ltr/piece): ";
     cin >> quantity;
+    while (quantity <= 0)
+    {
+        cout << "Enter valid quantity: ";
+        cin >> quantity;
+    }
     cout << "Amount: ";
     cin >> amount;
     commodity.setRate(amount / quantity);
@@ -90,18 +95,21 @@ void Expense::inputDetails()
 void Expense::printDetails()
 {
     cout << "Expense Details: " << endl;
-    cout << "ID: " << id << endl;
+    cout << "ID: ";
+    if (date.getDay() < 10)
+        cout << "0";
+    cout << id << endl;
     date.printDetails();
     commodity.printDetails();
     cout << "Quantity: " << quantity << endl;
     cout << "Amount: " << amount << endl;
     return;
 }
-void printDetails(vector<Expense> expenses)
+void Expense::printDetails(vector<Expense> expenses)
 {
     cout << "\n\n";
     cout << "------------------------------------------------------\n\n";
-    int sNoSpace = max(5LL, (int)log10(expenses.size())), idSpace = 2, dateSpace = 4, commodityNameSpace = 14, commodityTypeSpace = 4, commodityRateSpace = 4, quantitySpace = 8, amountSpace = 6;
+    long long sNoSpace = max(5LL, (long long)log10(expenses.size())), idSpace = 2, dateSpace = 4, commodityNameSpace = 14, commodityTypeSpace = 4, commodityRateSpace = 4, quantitySpace = 8, amountSpace = 6;
     for (auto expense : expenses)
     {
         if (idSpace < to_string(expense.getId()).length())
@@ -135,14 +143,17 @@ void printDetails(vector<Expense> expenses)
     cout << " | ";
     cout << left << setw(amountSpace) << "Amount";
     cout << " |\n ";
-    int totalDash = 6 * 3 + 4 + idSpace + dateSpace + commodityNameSpace + commodityTypeSpace + commodityRateSpace + quantitySpace + amountSpace;
-    for (int i = 0; i < totalDash; i++)
+    long long totalDash = 6 * 3 + 4 + idSpace + dateSpace + commodityNameSpace + commodityTypeSpace + commodityRateSpace + quantitySpace + amountSpace;
+    for (long long i = 0; i < totalDash; i++)
         cout << "-";
     cout << "\n";
     for (auto expense : expenses)
     {
         cout << " | ";
-        cout << left << setw(idSpace) << expense.getId();
+        if (expense.getDate().getDay() < 10)
+            cout << left << setw(idSpace) << (to_string(expense.getId()) + "0");
+        else
+            cout << left << setw(idSpace) << expense.getId();
         cout << " | ";
         cout << left << setw(dateSpace) << expense.getDate().dateToString();
         cout << " | ";
@@ -155,7 +166,7 @@ void printDetails(vector<Expense> expenses)
         cout << left << setw(quantitySpace) << expense.getQuantity();
         cout << " | ";
         cout << left << setw(amountSpace) << expense.getAmount();
-        cout << " |\n ";
+        cout << " |\n";
     }
     return;
 }
