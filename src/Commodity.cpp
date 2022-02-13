@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <map>
 using namespace std;
 
 #include "./../include/Commodity.hh"
@@ -10,9 +11,9 @@ Commodity::Commodity()
 {
     name = "";
     type = "";
-    rate = 0;
+    rate = -1.00;
 }
-Commodity::Commodity(string name, string type, int rate)
+Commodity::Commodity(string name, string type, double rate)
 {
     this->name = name;
     this->type = type;
@@ -29,7 +30,7 @@ void Commodity::setType(string type)
     this->type = type;
     return;
 }
-void Commodity::setRate(int rate)
+void Commodity::setRate(double rate)
 {
     this->rate = rate;
     return;
@@ -43,19 +44,17 @@ string Commodity::getType()
 {
     return type;
 }
-int Commodity::getRate()
+double Commodity::getRate()
 {
     return rate;
 }
 //other methods
 void Commodity::inputDetails()
 {
-    cout << "Enter Commodity Name: ";
+    cout << "Commodity Name: ";
     cin >> name;
-    cout << "Enter Commodity Type: ";
+    cout << "Commodity Type: ";
     cin >> type;
-    cout << "Enter Commodity Rate: ";
-    cin >> rate;
     return;
 }
 void Commodity::printDetails()

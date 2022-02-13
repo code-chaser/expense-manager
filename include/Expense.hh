@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 using namespace std;
 
 #include "./Date.hh"
@@ -16,26 +17,27 @@ private:
     int id;
     Date date;
     Commodity commodity;
-    int quantity;
-    int amount;
+    double quantity;
+    double amount;
 public:
     Expense();
-    Expense(int, Date, Commodity, int, int);
+    Expense(int, Date, Commodity, double, double);
     //setter methods
     void setId(int);
     void setDate(Date);
     void setCommodity(Commodity);
-    void setQuantity(int);
-    void setAmount(int);
+    void setQuantity(double);
+    void setAmount(double);
     //getter methods
     int getId();
     Date getDate();
     Commodity getCommodity();
-    int getQuantity();
-    int getAmount();
+    double getQuantity();
+    double getAmount();
     //other methods
     void inputDetails();
     void printDetails();
+    void printDetails(vector<Expense>);
 };
 
 #endif // !EXPENSE

@@ -8,9 +8,9 @@ using namespace std;
 
 Date::Date()
 {
-    day = 0;
-    month = 0;
-    year = 0;
+    day = -1;
+    month = -1;
+    year = -1;
 }
 Date::Date(int day, int month, int year)
 {
@@ -51,9 +51,9 @@ int Date::getYear()
 void Date::inputDetails()
 {
     cout << "Enter Date (DD,MM,YYYY): ";
-    cout << "Day   - (DD)  :" cin >> day;
-    cout << "Month - (MM)  :" cin >> month;
-    cout << "Year  - (YYYY):" cin >> year;
+    cout << "Day   - (DD)  : ", cin >> day;
+    cout << "Month - (MM)  : ", cin >> month;
+    cout << "Year  - (YYYY): ", cin >> year;
     return;
 }
 void Date::printDetails()
@@ -66,17 +66,17 @@ void Date::stringToDate(string date)
     stringstream ss(date);
     string token;
     int i = 0;
-    while(getline(ss, token, '/'))
+    while (getline(ss, token, '/'))
     {
-        if(i == 0)
+        if (i == 0)
         {
             day = stoi(token);
         }
-        else if(i == 1)
+        else if (i == 1)
         {
             month = stoi(token);
         }
-        else if(i == 2)
+        else if (i == 2)
         {
             year = stoi(token);
         }
@@ -89,4 +89,8 @@ string Date::dateToString()
     stringstream ss;
     ss << day << "/" << month << "/" << year;
     return ss.str();
+}
+int Date::value()
+{
+    return (day * 1000000) + (month * 10000) + (year * 1);
 }

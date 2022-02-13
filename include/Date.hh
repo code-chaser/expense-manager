@@ -29,6 +29,7 @@ public:
     void printDetails();
     void stringToDate(string);
     string dateToString();
+    int value();
 };
 
 #endif // !DATE

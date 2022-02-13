@@ -20,7 +20,12 @@ private:
 public:
     ExpenseManager();
     void addExpense(Expense);
+    void removeExpense(Expense);
+    Expense getExpenseDetails();
     void addCommodityType(string);
+    void removeCommodityType(string);
+    void printCommodityTypes();
+    string getCommodityType();
     void readFromCSV();
     void writeToCSV();
 };
