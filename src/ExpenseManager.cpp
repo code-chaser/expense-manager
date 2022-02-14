@@ -509,8 +509,8 @@ void ExpenseManager::readFromCSV()
         long long id;
         Date date;
         Commodity commodity;
-        long long quantity;
-        long long amount;
+        double quantity;
+        double amount;
         getline(ss, token, ',');
         id = stoll(token);
         getline(ss, token, ',');

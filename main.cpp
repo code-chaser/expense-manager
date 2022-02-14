@@ -44,7 +44,6 @@ Options:
 
 int main()
 {
-    string endLineChar;
     ExpenseManager::readFromCSV();
     long long choice = 0;
     while (choice != -1)
