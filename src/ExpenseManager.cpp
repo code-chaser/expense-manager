@@ -47,9 +47,17 @@ void ExpenseManager::removeExpense(Expense expense)
     expenses.erase(expense.getId());
     cout << "\nExpense with ID " << expense.getId() << " removed successfully!\n\n"
          << endl;
-    for (auto &expense : expenses)
-        if (expense.second.getDate().value() == date.value() && expense.second.getId() > id)
-            expense.second.setId(expense.second.getId() - 1);
+    long long cnt = 0;
+    for (auto E : expenses)
+    {
+        if (E.second.getDate().value() == date.value() && E.second.getId() > id)
+            cnt++;
+        else if (E.second.getDate().value() > date.value())
+            break;
+    }
+    for (long long i = 0; i < cnt; i++)
+        expenses[i + id] = expenses[i + id + 1], expenses[i + id].setId(i + id);
+    expenses.erase(cnt + id);
     return;
 }
 Expense ExpenseManager::getExpenseDetails()

@@ -18,7 +18,7 @@ using namespace std;
 #endif
 #ifdef __linux__
 #define clrscr() system("clear")
-#define pause() system("read -n1 -r -p \"Press any key to continue...\"")
+#define pause() cout<<"Press enter to continue...", cin.get()
 #endif
 
 /*
