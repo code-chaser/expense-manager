@@ -5,9 +5,13 @@
 #include <vector>
 #include <math.h>
 #include <iomanip>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 #include "./../include/Expense.hh"
+
+#define wait(x) this_thread::sleep_for(chrono::milliseconds(x))
 
 Expense::Expense()
 {
@@ -76,9 +80,11 @@ double Expense::getAmount()
 void Expense::inputDetails()
 {
     cout << "Enter Expense Details:\n";
-    cout << "------------------------------------------------------\n";
+    cout << "\n\n";
     date.inputDetails();
+    cout << "\n";
     commodity.inputDetails();
+    cout << "\n";
     cout << "Quantity (kg/ltr/piece): ";
     cin >> quantity;
     while (quantity <= 0)
@@ -89,12 +95,15 @@ void Expense::inputDetails()
     cout << "Amount: ";
     cin >> amount;
     commodity.setRate(amount / quantity);
-    cout << "------------------------------------------------------\n";
+    cout << "\n\n";
     return;
 }
 void Expense::printDetails()
 {
-    cout << "Expense Details: " << endl;
+    cout << "\n";
+
+    cout << "Expense Details: \n"
+         << endl;
     cout << "ID: ";
     if (date.getDay() < 10)
         cout << "0";
@@ -107,8 +116,10 @@ void Expense::printDetails()
 }
 void Expense::printDetails(vector<Expense> expenses)
 {
+    if (expenses.size() == 0)
+        return void(cout << "\n\n");
     cout << "\n\n";
-    cout << "------------------------------------------------------\n\n";
+    cout << "-------------------------------------------\n\n";
     long long sNoSpace = max(5LL, (long long)log10(expenses.size())), idSpace = 2, dateSpace = 4, commodityNameSpace = 14, commodityTypeSpace = 4, commodityRateSpace = 4, quantitySpace = 8, amountSpace = 6;
     for (auto expense : expenses)
     {
@@ -127,6 +138,11 @@ void Expense::printDetails(vector<Expense> expenses)
         if (amountSpace < to_string(expense.getAmount()).length())
             amountSpace = to_string(expense.getAmount()).length();
     }
+
+    long long totalDash = 6 * 3 + 4 + idSpace + dateSpace + commodityNameSpace + commodityTypeSpace + commodityRateSpace + quantitySpace + amountSpace;
+    cout << " ";
+    for (long long i = 0; i < totalDash; i++)
+        cout << "-";
     cout << "\n"
          << " | "
          << left << setw(idSpace) << "ID";
@@ -142,8 +158,8 @@ void Expense::printDetails(vector<Expense> expenses)
     cout << left << setw(quantitySpace) << "Quantity";
     cout << " | ";
     cout << left << setw(amountSpace) << "Amount";
-    cout << " |\n ";
-    long long totalDash = 6 * 3 + 4 + idSpace + dateSpace + commodityNameSpace + commodityTypeSpace + commodityRateSpace + quantitySpace + amountSpace;
+    cout << " |\n";
+    cout << " ";
     for (long long i = 0; i < totalDash; i++)
         cout << "-";
     cout << "\n";
@@ -168,5 +184,9 @@ void Expense::printDetails(vector<Expense> expenses)
         cout << left << setw(amountSpace) << expense.getAmount();
         cout << " |\n";
     }
+    cout << " ";
+    for (long long i = 0; i < totalDash; i++)
+        cout << "-";
+    cout << "\n\n";
     return;
 }

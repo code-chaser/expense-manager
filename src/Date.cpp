@@ -2,9 +2,13 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 #include "./../include/Date.hh"
+
+#define wait(x) this_thread::sleep_for(chrono::milliseconds(x))
 
 Date::Date()
 {
@@ -18,7 +22,7 @@ Date::Date(long long day, long long month, long long year)
     this->month = month;
     this->year = year;
 }
-//setter methods
+// setter methods
 void Date::setDay(long long day)
 {
     this->day = day;
@@ -34,7 +38,7 @@ void Date::setYear(long long year)
     this->year = year;
     return;
 }
-//getter methods
+// getter methods
 long long Date::getDay()
 {
     return day;
@@ -47,13 +51,42 @@ long long Date::getYear()
 {
     return year;
 }
-//other methods
+// other methods
+bool Date::validateDate()
+{
+    //check if the date is a valid calendar date
+    if(day < 1 || day > 31)
+        return false;
+    if(month < 1 || month > 12)
+        return false;
+    if(year < 0)
+        return false;
+    if(month == 2)
+    {
+        if(day > 29)
+            return false;
+        if(day == 29)
+            if(year % 4 != 0)
+                return false; // loophole: non-leap years like 2100, 2200, etc.
+    }
+    if(month == 4 || month == 6 || month == 9 || month == 11)
+        if(day > 30)
+            return false;
+    return true;
+}
 void Date::inputDetails()
 {
-    cout << "Enter Date (DD,MM,YYYY): ";
-    cout << "Day   - (DD)  : ", cin >> day;
-    cout << "Month - (MM)  : ", cin >> month;
-    cout << "Year  - (YYYY): ", cin >> year;
+    cout << "\n";
+    cout << "Enter Date (DD,MM,YYYY):\n";
+    cout << "\tDay   - (DD)  : ", cin >> day;
+    cout << "\tMonth - (MM)  : ", cin >> month;
+    cout << "\tYear  - (YYYY): ", cin >> year;
+    cout << "\n";
+    while(!validateDate())
+    {
+        cout << "\nInvalid Date!\nPlease enter a valid date:\n";
+        this->inputDetails();
+    }
     return;
 }
 void Date::printDetails()
@@ -65,39 +98,33 @@ void Date::stringToDate(string date)
 {
     stringstream ss(date);
     string token;
-    long long i = 0;
-    while (getline(ss, token, '/'))
-    {
-        if (i == 0)
-        {
-            day = stoll(token);
-        }
-        else if (i == 1)
-        {
-            month = stoll(token);
-        }
-        else if (i == 2)
-        {
-            year = stoll(token);
-        }
-        i++;
-    }
+    getline(ss, token, '/');
+    day = stoll(token);
+    getline(ss, token, '/');
+    month = stoll(token);
+    getline(ss, token, '/');
+    year = stoll(token);
     return;
 }
 string Date::dateToString()
 {
     stringstream ss;
-    if(day < 10) ss << "0";
+    if (day < 10)
+        ss << "0";
     ss << day << "/";
-    if(month < 10) ss << "0";
+    if (month < 10)
+        ss << "0";
     ss << month << "/";
-    if(year < 10) ss << "000";
-    else if(year < 100) ss << "00";
-    else if(year < 1000) ss << "0";
+    if (year < 10)
+        ss << "000";
+    else if (year < 100)
+        ss << "00";
+    else if (year < 1000)
+        ss << "0";
     ss << year;
     return ss.str();
 }
 long long Date::value()
 {
-    return (day * 1000000) + (month * 10000) + (year * 1);
+    return year * 10000 + month * 100 + day;
 }

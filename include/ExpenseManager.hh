@@ -8,26 +8,30 @@
 #include <sstream>
 using namespace std;
 
-#include "./Date.hh"
 #include "./Commodity.hh"
 #include "./Expense.hh"
 
 class ExpenseManager
 {
 private:
-    map<long long, Expense> expenses;
-    map<long long, string> commodityTypes;
+    static map<long long, Expense> expenses;
+    static map<long long, string> commodityTypes;
 public:
     ExpenseManager();
-    void addExpense(Expense);
-    void removeExpense(Expense);
-    Expense getExpenseDetails();
-    void addCommodityType(string);
-    void removeCommodityType(string);
-    void printCommodityTypes();
-    string getCommodityType();
-    void readFromCSV();
-    void writeToCSV();
+    
+    static void addExpense(Expense);
+    static void removeExpense(Expense);
+    static Expense getExpenseDetails();
+    static void calculateExpenditure();
+    static void printExpenses();
+
+    static void addCommodityType(string);
+    static void removeCommodityType(string);
+    static void printCommodityTypes();
+    static string getCommodityType();
+
+    static void readFromCSV();
+    static void writeToCSV();
 };
 
 #endif // !EXPENSEMANAGER

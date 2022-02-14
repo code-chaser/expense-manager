@@ -13,6 +13,7 @@ private:
     long long day;
     long long month;
     long long year;
+    bool validateDate();
 public:
     Date();
     Date(long long, long long, long long);

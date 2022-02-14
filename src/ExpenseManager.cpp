@@ -6,14 +6,22 @@
 #include <sstream>
 #include <iomanip>
 #include <math.h>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 #include "./../include/ExpenseManager.hh"
+#include "./../include/Date.hh"
+#include "./../include/Commodity.hh"
+#include "./../include/Expense.hh"
+
+#define wait(x) this_thread::sleep_for(chrono::milliseconds(x))
+
+map<long long, Expense> ExpenseManager::expenses = map<long long, Expense>();
+map<long long, string> ExpenseManager::commodityTypes = map<long long, string>();
 
 ExpenseManager::ExpenseManager()
 {
-    expenses = map<long long, Expense>();
-    commodityTypes = map<long long, string>();
 }
 void ExpenseManager::addExpense(Expense expense)
 {
@@ -30,29 +38,34 @@ void ExpenseManager::addExpense(Expense expense)
     cout << "\nExpense added successfully!" << endl;
     cout << "Expense ID is " << expense.getId() << "\n"
          << endl;
-    for (auto commodityType : commodityTypes)
-        if (expense.getCommodity().getType() == commodityType.second)
-            return;
-    commodityTypes[commodityTypes.size()] = expense.getCommodity().getType();
     return;
 }
 void ExpenseManager::removeExpense(Expense expense)
 {
+    Date date = expense.getDate();
+    long long id = expense.getId();
     expenses.erase(expense.getId());
-    cout << "\nExpense with ID " << expense.getId() << " removed successfully!\n"
+    cout << "\nExpense with ID " << expense.getId() << " removed successfully!\n\n"
          << endl;
+    for (auto &expense : expenses)
+        if (expense.second.getDate().value() == date.value() && expense.second.getId() > id)
+            expense.second.setId(expense.second.getId() - 1);
     return;
 }
 Expense ExpenseManager::getExpenseDetails()
 {
     long long choice;
+    cout << "\n\n-------------------------------------------\n\n";
     cout << "Search expense by: " << endl;
     cout << "[01] - ID" << endl;
     cout << "[02] - Date" << endl;
     cout << "[03] - Commodity Type" << endl;
     cout << "[04] - Commodity Name" << endl;
-    cout << "[05] - Amount Range" << endl;
-    cout << "[-1] - Back" << endl;
+    cout << "[05] - Amount Range\n"
+         << endl;
+    cout << "[-1] - Back\n"
+         << endl;
+    cout << "-------------------------------------------\n\n";
     cout << "Enter your choice: ";
     cin >> choice;
     while (choice > 5 || (choice < 1 && choice != -1))
@@ -60,6 +73,8 @@ Expense ExpenseManager::getExpenseDetails()
         cout << "\nInvalid choice.\nEnter a valid choice: ";
         cin >> choice;
     }
+
+    cout << "\n-------------------------------------------\n\n";
     if (choice == -1)
         return Expense();
     else if (choice == 1)
@@ -74,8 +89,8 @@ Expense ExpenseManager::getExpenseDetails()
         }
         else
         {
-            cout << "No expense found with ID: " << idReq << endl;
-            cout << "Do you want to try again? (Y for Yes || N for No): ";
+            cout << "\n\nNo expense found with ID: " << idReq << endl;
+            cout << "\nDo you want to try again? (Y for Yes || N for No): ";
             char choice;
             cin >> choice;
             while (choice != 'Y' && choice != 'N')
@@ -90,7 +105,7 @@ Expense ExpenseManager::getExpenseDetails()
     {
 
         Date dateReq;
-        cout << "Enter Date: ";
+        cout << "\nEnter Date: ";
         dateReq.inputDetails();
         vector<Expense> matchingExpenses;
         for (auto expense : expenses)
@@ -100,7 +115,7 @@ Expense ExpenseManager::getExpenseDetails()
         {
             cout << "\nNo matching records found with date " << dateReq.dateToString() << ".\n"
                  << endl;
-            cout << "Do you want to try again? (Y for Yes || N for No): ";
+            cout << "\nDo you want to try again? (Y for Yes || N for No): ";
             char choice;
             cin >> choice;
             while (choice != 'Y' && choice != 'N')
@@ -112,7 +127,8 @@ Expense ExpenseManager::getExpenseDetails()
         }
         else
         {
-            cout << matchingExpenses.size() << " matching records found with date " << dateReq.dateToString() << ".\n"
+            cout << "\n"
+                 << matchingExpenses.size() << " matching records found with date " << dateReq.dateToString() << ".\n"
                  << endl;
             Expense::printDetails(matchingExpenses);
             char choice = 'Y';
@@ -124,13 +140,13 @@ Expense ExpenseManager::getExpenseDetails()
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
                         return expense;
-                cout << "No expense from the list above has ID " << idReq << ".\n"
+                cout << "\nNo expense from the list above has ID " << idReq << ".\n"
                      << endl;
-                cout << "Do you want to try again? (Y for Yes || N for No): ";
+                cout << "\nDo you want to try again? (Y for Yes || N for No): ";
                 cin >> choice;
                 while (choice != 'Y' && choice != 'N')
                 {
-                    cout << "Enter valid choice (Y or N): ";
+                    cout << "\nEnter valid choice (Y or N): ";
                     cin >> choice;
                 }
             }
@@ -139,7 +155,7 @@ Expense ExpenseManager::getExpenseDetails()
     else if (choice == 3)
     {
         string commodityTypeReq;
-        cout << "Enter Commodity Type: ";
+        cout << "\nEnter Commodity Type: ";
         cin >> commodityTypeReq;
         vector<Expense> matchingExpenses;
         for (auto expense : expenses)
@@ -149,7 +165,7 @@ Expense ExpenseManager::getExpenseDetails()
         {
             cout << "\nNo matching records found with commodity type " << commodityTypeReq << ".\n"
                  << endl;
-            cout << "Do you want to try again? (Y for Yes || N for No): ";
+            cout << "\nDo you want to try again? (Y for Yes || N for No): ";
             char choice;
             cin >> choice;
             while (choice != 'Y' && choice != 'N')
@@ -161,7 +177,8 @@ Expense ExpenseManager::getExpenseDetails()
         }
         else
         {
-            cout << matchingExpenses.size() << " matching records found with commodity type " << commodityTypeReq << ".\n"
+            cout << "\n"
+                 << matchingExpenses.size() << " matching records found with commodity type " << commodityTypeReq << ".\n"
                  << endl;
             Expense E = Expense();
             Expense::printDetails(matchingExpenses);
@@ -174,7 +191,7 @@ Expense ExpenseManager::getExpenseDetails()
                 for (auto expense : matchingExpenses)
                     if (expense.getId() == idReq)
                         return expense;
-                cout << "No expense from the list above has ID " << idReq << ".\n"
+                cout << "\nNo expense from the list above has ID " << idReq << ".\n"
                      << endl;
                 cout << "Do you want to try again? (Y for Yes || N for No): ";
                 cin >> choice;
@@ -294,31 +311,159 @@ Expense ExpenseManager::getExpenseDetails()
     }
     return Expense();
 }
+void ExpenseManager::calculateExpenditure()
+{
+    long long choice;
+    cout << "Options: " << endl;
+    cout << "[01] - Between two dates" << endl;
+    cout << "[02] - Total Expenditure from the begining of the records" << endl;
+    cout << "[-1] - Back" << endl;
+    cout << "Enter your choice: ";
+    cin >> choice;
+    while ((choice > 4) || (choice < 1 && choice != -1))
+    {
+        cout << "Enter valid choice: ";
+        cin >> choice;
+    }
+    if (choice == -1)
+        return;
+    else if (choice == 1)
+    {
+        Date startDate, endDate;
+        cout << "Enter start date:\n";
+        startDate.inputDetails();
+        cout << "Enter end date:\n";
+        endDate.inputDetails();
+        cout << "Calculate expenditure from " << startDate.dateToString() << " to " << endDate.dateToString() << ": " << endl;
+        cout << "[01] - By Commodity name" << endl;
+        cout << "[02] - By Commodity type" << endl;
+        cout << "[03] - For all commodities" << endl;
+        cout << "[-1] - Back" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        while ((choice > 3) || (choice < 1 && choice != -1))
+        {
+            cout << "Enter valid choice: ";
+            cin >> choice;
+        }
+        if (choice == -1)
+            return calculateExpenditure();
+        else if (choice == 1)
+        {
+            string commodityNameReq;
+            cout << "Enter Commodity Name: ";
+            getline(cin >> ws, commodityNameReq);
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                if (expense.second.getDate().value() >= startDate.value() && expense.second.getDate().value() <= endDate.value() &&
+                    expense.second.getCommodity().getName() == commodityNameReq)
+                    totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure from " << startDate.value() << " to " << endDate.value() << " for commodity " << commodityNameReq
+                 << " is " << totalExpenditure << endl;
+        }
+        else if (choice == 2)
+        {
+            string commodityTypeReq;
+            cout << "Enter Commodity Type: ";
+            getline(cin >> ws, commodityTypeReq);
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                if (expense.second.getDate().value() >= startDate.value() && expense.second.getDate().value() <= endDate.value() &&
+                    expense.second.getCommodity().getType() == commodityTypeReq)
+                    totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure from " << startDate.value() << " to " << endDate.value() << " for commodity type " << commodityTypeReq
+                 << " is " << totalExpenditure << endl;
+        }
+        else if (choice == 3)
+        {
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                if (expense.second.getDate().value() >= startDate.value() && expense.second.getDate().value() <= endDate.value())
+                    totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure from " << startDate.value() << " to " << endDate.value() << " is " << totalExpenditure << endl;
+        }
+    }
+    else if (choice == 2)
+    {
+        cout << "Calculate expenditure from the begining of the records: " << endl;
+        cout << "[01] - By Commodity name" << endl;
+        cout << "[02] - By Commodity type" << endl;
+        cout << "[03] - For all commodities" << endl;
+        cout << "[-1] - Back" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        while ((choice > 3) || (choice < 1 && choice != -1))
+        {
+            cout << "Enter valid choice: ";
+            cin >> choice;
+        }
+        if (choice == -1)
+            return calculateExpenditure();
+        else if (choice == 1)
+        {
+            string commodityNameReq;
+            cout << "Enter Commodity Name: ";
+            getline(cin >> ws, commodityNameReq);
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                if (expense.second.getCommodity().getName() == commodityNameReq)
+                    totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure for commodity " << commodityNameReq << " is " << totalExpenditure << endl;
+        }
+        else if (choice == 2)
+        {
+            string commodityTypeReq;
+            cout << "Enter Commodity Type: ";
+            getline(cin >> ws, commodityTypeReq);
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                if (expense.second.getCommodity().getType() == commodityTypeReq)
+                    totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure for commodity type " << commodityTypeReq << " is " << totalExpenditure << endl;
+        }
+        else if (choice == 3)
+        {
+            long long totalExpenditure = 0;
+            for (auto expense : expenses)
+                totalExpenditure += expense.second.getAmount();
+            cout << "Total expenditure is " << totalExpenditure << endl;
+        }
+    }
+}
+void ExpenseManager::printExpenses()
+{
+    vector<Expense> allExpenses;
+    for (auto expense : expenses)
+        allExpenses.push_back(expense.second);
+    Expense::printDetails(allExpenses);
+    return;
+}
 void ExpenseManager::addCommodityType(string type)
 {
     for (auto commodityType : commodityTypes)
         if (commodityType.second == type)
-        {
             return;
-        }
     commodityTypes[commodityTypes.size()] = type;
     return;
 }
 void ExpenseManager::removeCommodityType(string type)
 {
-    for (auto commodityType : commodityTypes)
-        if (commodityType.second == type)
+    for (long long i = 0; i < commodityTypes.size(); i++)
+        if (commodityTypes[i] == type)
         {
-            commodityTypes.erase(commodityType.first);
+            for (long long j = i; j < commodityTypes.size() - 1; j++)
+                commodityTypes[j] = commodityTypes[j + 1];
+            commodityTypes.erase(commodityTypes.size() - 1);
             return;
         }
     return;
 }
 void ExpenseManager::printCommodityTypes()
 {
-    cout << "\nCommodity Types:\n\n";
+    cout << "\nExisting Commodity Types:\n\n";
     for (auto commodityType : commodityTypes)
-        cout << left << setw(log10(max(0, (int)commodityTypes.size() - 1))) << commodityType.first, cout << ": " << commodityType.second << endl;
+        cout << left << setw(log10((int)(commodityTypes.size() > 1) ? commodityTypes.size() - 1 : 1)) << commodityType.first,
+            cout << ": " << commodityType.second << endl;
     cout << endl;
     return;
 }
@@ -385,7 +530,7 @@ void ExpenseManager::writeToCSV()
     file << "ID,Date,Commodity Name,Commodity Type,Rate,Quantity,Amount\n";
     for (auto expense : expenses)
     {
-        file << ((expense.second.getDate().getDay() < 10) ? ("0" + to_string(expense.first)) : to_string(expense.first)) << ",";
+        file << expense.first << ",";
         file << expense.second.getDate().dateToString() << ",";
         file << expense.second.getCommodity().getName() << ",";
         file << expense.second.getCommodity().getType() << ",";
@@ -401,7 +546,7 @@ void ExpenseManager::writeToCSV()
     file << "S.No.,Commodity Type\n";
     for (auto commodityType : commodityTypes)
     {
-        file << commodityType.first + 1 << ",";
+        file << commodityType.first << ",";
         file << commodityType.second << "\n";
     }
     file.close();

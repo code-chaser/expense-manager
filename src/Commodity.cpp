@@ -3,9 +3,14 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 #include "./../include/Commodity.hh"
+#include "./../include/ExpenseManager.hh"
+
+#define wait(x) this_thread::sleep_for(chrono::milliseconds(x))
 
 Commodity::Commodity()
 {
@@ -19,7 +24,7 @@ Commodity::Commodity(string name, string type, double rate)
     this->type = type;
     this->rate = rate;
 }
-//setter methods
+// setter methods
 void Commodity::setName(string name)
 {
     this->name = name;
@@ -35,7 +40,7 @@ void Commodity::setRate(double rate)
     this->rate = rate;
     return;
 }
-//getter methods
+// getter methods
 string Commodity::getName()
 {
     return name;
@@ -48,13 +53,33 @@ double Commodity::getRate()
 {
     return rate;
 }
-//other methods
+// other methods
 void Commodity::inputDetails()
 {
     cout << "Commodity Name: ";
-    cin >> name;
-    cout << "Commodity Type: ";
-    cin >> type;
+    getline(cin >> ws, name);
+    cout << "\n";
+    cout << "Commodity Type:\n";
+    ExpenseManager::printCommodityTypes();
+    cout << "\nOptions:\n";
+    cout << "[01] - Select commodity type from the list above\n";
+    cout << "[02] - Add a new commodity type\n\n";
+    cout << "Enter your choice: ";
+    int choice;
+    cin >> choice;
+    while (choice != 1 && choice != 2)
+    {
+        cout << "\nInvalid choice.\nPlease enter a valid choice: ";
+        cin >> choice;
+    }
+    if (choice == 1)
+        type = ExpenseManager::getCommodityType();
+    else if (choice == 2)
+    {
+        cout << "Enter new commodity type: ";
+        getline(cin >> ws, type);
+        ExpenseManager::addCommodityType(type);
+    }
     return;
 }
 void Commodity::printDetails()
