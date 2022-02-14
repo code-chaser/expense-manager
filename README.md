@@ -52,6 +52,9 @@ ___
 
 
 ## CLASS DESIGN
+
+![ClassDiagram](https://user-images.githubusercontent.com/63065397/153952270-def56c4f-2c9b-4fa1-ac93-064e7347fcbd.png)
+
 ___
 ### TECH STACK
 - C++
