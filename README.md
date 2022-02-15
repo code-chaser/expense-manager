@@ -11,7 +11,7 @@ ___
 - Now, run the following commands:
    - for building executable file: 
   ```bash
-     make all
+     make all        # universal;
   ```
    - for executing it:
   ```bash
