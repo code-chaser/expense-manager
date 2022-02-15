@@ -489,10 +489,10 @@ string ExpenseManager::getCommodityType()
     long long id;
     cout << "\nEnter ID of required Commodity Type: ";
     cin >> id;
-    if (id < 0 || id >= commodityTypes.size())
+    while (id < 0 || id >= commodityTypes.size())
     {
-        cout << "Invalid ID.\n";
-        return "";
+        cout << "Invalid ID.\nPlease enter again: ";
+        cin >> id;
     }
     return commodityTypes[id];
 }
