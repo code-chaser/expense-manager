@@ -77,12 +77,12 @@ double Expense::getAmount()
     return amount;
 }
 // other methods
-void Expense::inputDetails()
+void Expense::inputDetails(bool _date)
 {
     cout << "Enter Expense Details:\n";
     cout << "\n\n";
-    date.inputDetails();
-    cout << "\n";
+    if (_date)
+        date.inputDetails(), cout << "\n";
     commodity.inputDetails();
     cout << "\n";
     cout << "Quantity (kg/ltr/piece): ";

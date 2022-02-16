@@ -35,7 +35,7 @@ public:
     double getQuantity();
     double getAmount();
     //other methods
-    void inputDetails();
+    void inputDetails(bool);
     void printDetails();
     static void printDetails(vector<Expense>);
 };

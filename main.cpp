@@ -18,7 +18,7 @@ using namespace std;
 #endif
 #ifdef __linux__
 #define clrscr() system("clear")
-#define pause() cout<<"Press enter to continue...", cin.get()
+#define pause() cout << "Press enter to continue...", cin.get()
 #endif
 
 /*
@@ -104,8 +104,32 @@ int main()
                 if (subChoice == 1)
                 {
                     Expense expense;
-                    expense.inputDetails();
+                    expense.inputDetails(1);
                     ExpenseManager::addExpense(expense);
+                    cout << "\n\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
+                    char choice;
+                    cin >> choice;
+                    while (choice != 'Y' && choice != 'N')
+                    {
+                        cout << "Invalid choice. Please enter again: ";
+                        cin >> choice;
+                    }
+                    cout << "\n\n";
+                    while (choice == 'Y')
+                    {
+                        Date _date = expense.getDate();
+                        expense.inputDetails(0);
+                        expense.setDate(_date);
+                        ExpenseManager::addExpense(expense);
+                        cout << "\n\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
+                        cin >> choice;
+                        while (choice != 'Y' && choice != 'N')
+                        {
+                            cout << "Invalid choice. Please enter again: ";
+                            cin >> choice;
+                        }
+                        cout << "\n\n";
+                    }
                 }
                 else if (subChoice == 2)
                 {
