@@ -106,7 +106,7 @@ int main()
                     Expense expense;
                     expense.inputDetails(1);
                     ExpenseManager::addExpense(expense);
-                    cout << "\n\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
+                    cout << "\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
                     char choice;
                     cin >> choice;
                     while (choice != 'Y' && choice != 'N')
@@ -121,7 +121,7 @@ int main()
                         expense.inputDetails(0);
                         expense.setDate(_date);
                         ExpenseManager::addExpense(expense);
-                        cout << "\n\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
+                        cout << "\n\nAdd another expense with the same date? (Y for Yes || N for No): ";
                         cin >> choice;
                         while (choice != 'Y' && choice != 'N')
                         {
