@@ -96,10 +96,14 @@ ___
 ## CLASS DESIGN
    ***- rendered by [mermaid](https://mermaid-js.github.io/mermaid/#/classDiagram)***
 
+<br>
+<br>
 
 ```mermaid
+
+
 classDiagram
-   direction LR
+   direction RL
    class ExpenseManager{
       -$map~long long, Expense~ expenses
       -$map~long long, string~ commodityTypes
@@ -180,7 +184,6 @@ classDiagram
    link Commodity "https://github.com/code-chaser/expense-manager/blob/main/include/Commodity.hh" "click to see declaration"
    link Date "https://github.com/code-chaser/expense-manager/blob/main/include/Date.hh" "click to see declaration"
 ```
-
 ___
 ### TECH STACK
 - C++
