@@ -90,10 +90,12 @@ ___
 ![ClassDiagram](https://user-images.githubusercontent.com/63065397/153952270-def56c4f-2c9b-4fa1-ac93-064e7347fcbd.png)
 
 ___
+
+<br>
+
 ## CLASS DESIGN
    ***- rendered by [mermaid](https://mermaid-js.github.io/mermaid/#/classDiagram)***
 
-<br>
 
 ```mermaid
 classDiagram
