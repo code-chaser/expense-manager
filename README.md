@@ -99,6 +99,7 @@ ___
 
 ```mermaid
 classDiagram
+   direction LR
    class ExpenseManager{
       -$map~long long, Expense~ expenses
       -$map~long long, string~ commodityTypes
@@ -113,7 +114,6 @@ classDiagram
       +$printCommodityTypes() void
       +$readFromCSV() void
       +$writeToCSV() void
-      
    }
    class Expense{
       -long long id
@@ -175,6 +175,10 @@ classDiagram
    ExpenseManager *-- Expense
    Expense *-- Commodity
    Expense *-- Date
+   link ExpenseManager "https://github.com/code-chaser/expense-manager/blob/main/include/ExpenseManager.hh" "click to see declaration"
+   link Expense "https://github.com/code-chaser/expense-manager/blob/main/include/Expense.hh" "click to see declaration"
+   link Commodity "https://github.com/code-chaser/expense-manager/blob/main/include/Commodity.hh" "click to see declaration"
+   link Date "https://github.com/code-chaser/expense-manager/blob/main/include/Date.hh" "click to see declaration"
 ```
 
 ___
