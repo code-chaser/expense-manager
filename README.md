@@ -1,5 +1,5 @@
 # expense-manager &nbsp; [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/code-chaser/expense-manager/blob/main/LICENSE) [![Download Code](https://img.shields.io/badge/Download-Code-red.svg)](https://github.com/code-chaser/expense-manager/archive/refs/heads/main.zip)
-a simple tool that can be used to keep track of daily household expenses, made using basic OOPs features in C++ and a little bit of file handling
+A simple tool that can be used to keep track of daily household expenses, made using basic OOPs features in C++ and a little bit of file handling
 ___
 
 <!--
